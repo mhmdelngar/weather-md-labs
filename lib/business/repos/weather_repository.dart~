@@ -1,0 +1,25 @@
+import 'package:weather_md_labs/business/services/weather_service.dart';
+
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+class WeatherService {
+  final String _baseUrl = 'https://api.openweathermap.org/data/2.5/weather';
+  final String _apiKey = 'YOUR_API_KEY_HERE';
+
+  /// Fetches weather data as raw JSON
+  Future<Map<String, dynamic>> fetchWeatherData(String city) async {
+    final url = '$_baseUrl?q=$city&appid=$_apiKey&units=metric';
+    try {
+      final response = await http.get(Uri.parse(url));
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body) as Map<String, dynamic>;
+      } else {
+        throw Exception('City not found');
+      }
+    } catch (e) {
+      throw Exception('Failed to fetch weather data: $e');
+    }
+  }
+}
+
